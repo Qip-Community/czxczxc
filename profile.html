@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Профиль</title>
+  <title>Профиль - SocialNetwork</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,8 +14,16 @@
 
   <div class="container">
     <div class="card" style="text-align: center;">
-      <img id="profAvatar" class="avatar" style="width: 90px; height: 90px; margin-bottom: 10px;" src="">
+      <img id="profAvatar" class="avatar" style="width: 100px; height: 100px; margin-bottom: 10px;" src="">
       <h2 id="profName"></h2>
+      
+      <!-- Форма редактирования своего профиля -->
+      <div id="editProfileSection" class="hidden" style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+        <h3>Редактировать профиль</h3>
+        <input type="text" id="editName" placeholder="Новое имя">
+        <input type="text" id="editAvatar" placeholder="URL нового аватара">
+        <button id="saveProfileBtn">Сохранить изменения</button>
+      </div>
     </div>
 
     <h3>Посты пользователя:</h3>
@@ -24,7 +32,7 @@
 
   <script type="module">
     import { auth, renderFeed } from './app.js';
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const urlParams = new URLSearchParams(window.location.search);
     const targetUid = urlParams.get('uid');
@@ -39,7 +47,20 @@
 
       if (user && uidToLoad === user.uid) {
         document.getElementById('profName').textContent = user.displayName || user.email;
-        document.getElementById('profAvatar').src = user.photoURL;
+        document.getElementById('profAvatar').src = user.photoURL || 'https://via.placeholder.com/40';
+        document.getElementById('editProfileSection').classList.remove('hidden');
+
+        document.getElementById('saveProfileBtn').onclick = async () => {
+          const newName = document.getElementById('editName').value.trim();
+          const newAvatar = document.getElementById('editAvatar').value.trim();
+
+          await updateProfile(user, {
+            displayName: newName || user.displayName,
+            photoURL: newAvatar || user.photoURL
+          });
+
+          location.reload();
+        };
       }
 
       renderFeed(uidToLoad);

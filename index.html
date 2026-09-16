@@ -3,297 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Социальная Сеть</title>
-  <style>
-    :root {
-      --bg-color: #f0f2f5;
-      --card-bg: #ffffff;
-      --primary: #1877f2;
-      --primary-hover: #166fe5;
-      --text: #050505;
-      --subtext: #65676b;
-      --border: #dddfe2;
-      --danger: #e41e3f;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    body { background-color: var(--bg-color); color: var(--text); padding-bottom: 50px; }
-
-    /* Шляпка (Header) */
-    header {
-      background: var(--card-bg);
-      border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; z-index: 100;
-      padding: 12px 20px;
-      display: flex; justify-content: space-between; align-items: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    header h1 { color: var(--primary); font-size: 24px; font-weight: bold; }
-    .user-profile-badge { display: flex; align-items: center; gap: 10px; }
-    .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #ccc; }
-
-    /* Контейнер */
-    .container { max-width: 680px; margin: 20px auto; padding: 0 15px; }
-
-    /* Карточки */
-    .card {
-      background: var(--card-bg);
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 20px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Формы авторизации */
-    .auth-box { display: flex; flex-direction: column; gap: 12px; }
-    .auth-box h2 { text-align: center; margin-bottom: 10px; }
-    input, textarea {
-      width: 100%; padding: 12px; border: 1px solid var(--border);
-      border-radius: 6px; font-size: 15px; outline: none;
-    }
-    input:focus, textarea:focus { border-color: var(--primary); }
-    textarea { resize: vertical; min-height: 80px; }
-
-    button {
-      background: var(--primary); color: white; border: none;
-      padding: 10px 16px; border-radius: 6px; font-weight: 600;
-      font-size: 15px; cursor: pointer; transition: 0.2s;
-    }
-    button:hover { background: var(--primary-hover); }
-    .btn-secondary { background: #e4e6eb; color: var(--text); }
-    .btn-secondary:hover { background: #d8dadf; }
-    .btn-danger { background: var(--danger); }
-
-    /* Публикация */
-    .create-post { display: flex; flex-direction: column; gap: 10px; }
-    
-    /* Лента Постов */
-    .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-    .post-author { font-weight: 600; font-size: 15px; }
-    .post-date { font-size: 12px; color: var(--subtext); }
-    .post-content { font-size: 15px; line-height: 1.4; margin-bottom: 12px; white-space: pre-wrap; }
-    .post-footer { display: flex; gap: 15px; border-top: 1px solid var(--border); padding-top: 10px; }
-    .like-btn { background: none; color: var(--subtext); padding: 5px 10px; display: flex; align-items: center; gap: 6px; }
-    .like-btn.liked { color: var(--danger); font-weight: bold; }
-    
-    .hidden { display: none !important; }
-    .auth-toggle { text-align: center; margin-top: 10px; font-size: 14px; color: var(--primary); cursor: pointer; }
-  </style>
+  <title>Главная - SocialNetwork</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Хедер -->
   <header>
-    <h1>SocialNetwork</h1>
-    <div id="userHeader" class="user-profile-badge hidden">
-      <img id="myAvatar" class="avatar" src="https://via.placeholder.com/40" alt="Avatar">
-      <span id="myDisplayName" style="font-weight: 600;"></span>
-      <button id="logoutBtn" class="btn-secondary" style="padding: 6px 12px; font-size: 13px;">Выйти</button>
+    <h1><a href="index.html">SocialNetwork</a></h1>
+    <div class="nav-links">
+      <a href="auth.html" id="authNavBtn"><button>Войти</button></a>
+      <div id="userHeader" class="user-profile-badge hidden" style="display:flex; align-items:center; gap:10px;">
+        <a href="profile.html"><img id="myAvatar" class="avatar" src=""></a>
+        <a href="profile.html" id="myDisplayName" style="font-weight:600; text-decoration:none; color:inherit;"></a>
+        <button id="logoutBtn" class="btn-secondary">Выйти</button>
+      </div>
     </div>
   </header>
 
   <div class="container">
-
-    <!-- ФОРМА ВХОДА И РЕГИСТРАЦИИ -->
-    <div id="authSection" class="card auth-box">
-      <h2 id="authTitle">Вход в аккаунт</h2>
-      <input type="text" id="nameInput" placeholder="Ваше Имя / Никнейм" class="hidden">
-      <input type="email" id="emailInput" placeholder="Электронная почта">
-      <input type="password" id="passwordInput" placeholder="Пароль">
-      <button id="authPrimaryBtn">Войти</button>
-      <div id="authToggleBtn" class="auth-toggle">Нет аккаунта? Зарегистрироваться</div>
+    <!-- Поиск постов -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="🔍 Поиск по постам...">
     </div>
 
-  <!-- ФОРМА СОЗДАНИЯ ПОСТА (Видна только авторизованным) -->
-    <div id="postCreateSection" class="card create-post hidden">
-      <textarea id="postInput" placeholder="Что у вас нового?"></textarea>
+    <!-- Публикация -->
+    <div id="postCreateSection" class="card hidden">
+      <textarea id="postInput" placeholder="Что нового?"></textarea>
+      <input type="text" id="postImgInput" placeholder="URL-ссылка на картинку (необязательно)">
       <button id="publishBtn">Опубликовать</button>
     </div>
 
-    <!-- ЛЕНТА НОВОСТЕЙ -->
+    <!-- Лента -->
     <div id="postsFeed"></div>
-
   </div>
 
-  <!-- Firebase JavaScript SDK (Модульное подключение) -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, 
-      signOut, onAuthStateChanged, updateProfile 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { 
-      getFirestore, collection, addDoc, onSnapshot, query, orderBy, 
-      doc, updateDoc, arrayUnion, arrayRemove 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { auth, db, renderFeed } from './app.js';
+    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Конфигурация проекта Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyAisrucwhJn-DUlsPKhB1sdf5tF3OfOVzA",
-      authDomain: "fsfs-27fa1.firebaseapp.com",
-      projectId: "fsfs-27fa1",
-      storageBucket: "fsfs-27fa1.firebasestorage.app",
-      messagingSenderId: "191715294559",
-      appId: "1:191715294559:web:272608cd9c0f171c1bcaea",
-      measurementId: "G-5BY3NFN2F8"
+    renderFeed();
+
+    // Фильтрация через поиск
+    document.getElementById('searchInput').oninput = (e) => {
+      renderFeed(null, e.target.value);
     };
 
-    // Инициализация
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    // Опубликовать
+    document.getElementById('publishBtn').onclick = async () => {
+      const text = document.getElementById('postInput').value.trim();
+      const img = document.getElementById('postImgInput').value.trim();
+      if (!text) return alert('Введите текст поста');
 
-    let currentUser = null;
-    let isSignUpMode = false;
-
-    // DOM Элементы
-    const authSection = document.getElementById('authSection');
-    const authTitle = document.getElementById('authTitle');
-    const nameInput = document.getElementById('nameInput');
-    const emailInput = document.getElementById('emailInput');
-    const passwordInput = document.getElementById('passwordInput');
-    const authPrimaryBtn = document.getElementById('authPrimaryBtn');
-    const authToggleBtn = document.getElementById('authToggleBtn');
-    
-    const userHeader = document.getElementById('userHeader');
-    const myAvatar = document.getElementById('myAvatar');
-    const myDisplayName = document.getElementById('myDisplayName');
-    const logoutBtn = document.getElementById('logoutBtn');
-    
-    const postCreateSection = document.getElementById('postCreateSection');
-    const postInput = document.getElementById('postInput');
-    const publishBtn = document.getElementById('publishBtn');
-    const postsFeed = document.getElementById('postsFeed');
-
-    // Переключение режимов: Вход / Регистрация
-    authToggleBtn.onclick = () => {
-      isSignUpMode = !isSignUpMode;
-      authTitle.textContent = isSignUpMode ? "Регистрация" : "Вход в аккаунт";
-      authPrimaryBtn.textContent = isSignUpMode ? "Зарегистрироваться" : "Войти";
-      nameInput.classList.toggle('hidden', !isSignUpMode);
-      authToggleBtn.textContent = isSignUpMode ? "Уже есть аккаунт? Войти" : "Нет аккаунта? Зарегистрироваться";
-    };
-
-    // Обработка Входа / Регистрации
-    authPrimaryBtn.onclick = async () => {
-      const email = emailInput.value.trim();
-      const password = passwordInput.value.trim();
-      const name = nameInput.value.trim();
-
-      if (!email || !password) return alert('Заполните все поля!');
-
-      try {
-        if (isSignUpMode) {
-          if (!name) return alert('Введите ваше имя!');
-          const res = await createUserWithEmailAndPassword(auth, email, password);
-          // Установка стандартного аватара и имени
-          await updateProfile(res.user, {
-            displayName: name,
-            photoURL: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`
-          });
-          location.reload();
-        } else {
-          await signInWithEmailAndPassword(auth, email, password);
-        }
-      } catch (error) {
-        alert("Ошибка: " + error.message);
-      }
-    };
-
-    // Выход из системы
-    logoutBtn.onclick = () => signOut(auth);
-
-    // Отслеживание состояния входа
-    onAuthStateChanged(auth, (user) => {
-      currentUser = user;
-      if (user) {
-        authSection.classList.add('hidden');
-        userHeader.classList.remove('hidden');
-        postCreateSection.classList.remove('hidden');
-        
-        myDisplayName.textContent = user.displayName || user.email;
-        myAvatar.src = user.photoURL || 'https://via.placeholder.com/40';
-      } else {
-        authSection.classList.remove('hidden');
-        userHeader.classList.add('hidden');
-        postCreateSection.classList.add('hidden');
-      }
-    });
-
-    // Публикация нового поста
-    publishBtn.onclick = async () => {
-      const text = postInput.value.trim();
-      if (!text) return alert('Пост не может быть пустым!');
-
-      try {
-        await addDoc(collection(db, "posts"), {
-          text: text,
-          authorName: currentUser.displayName || currentUser.email,
-          authorAvatar: currentUser.photoURL || 'https://via.placeholder.com/40',
-          authorId: currentUser.uid,
-          createdAt: new Date(),
-          likes: []
-        });
-        postInput.value = '';
-      } catch (err) {
-        alert("Ошибка при публикации: " + err.message);
-      }
-    };
-
-    // Загрузка ленты новостей в реальном времени
-    const postsQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-    onSnapshot(postsQuery, (snapshot) => {
-      postsFeed.innerHTML = '';
-      
-      snapshot.forEach((docSnap) => {
-        const post = docSnap.data();
-        const postId = docSnap.id;
-        const likes = post.likes || [];
-        const isLiked = currentUser && likes.includes(currentUser.uid);
-
-        const postElement = document.createElement('div');
-        postElement.className = 'card';
-        postElement.innerHTML = `
-          <div class="post-header">
-            <img class="avatar" src="${post.authorAvatar}" alt="Avatar">
-            <div>
-              <div class="post-author">${post.authorName}</div>
-              <div class="post-date">${post.createdAt ? new Date(post.createdAt.toDate()).toLocaleString() : ''}</div>
-            </div>
-          </div>
-          <div class="post-content">${escapeHtml(post.text)}</div>
-          <div class="post-footer">
-            <button class="like-btn ${isLiked ? 'liked' : ''}" id="like-${postId}">
-              ❤️ ${likes.length}
-            </button>
-          </div>
-        `;
-
-        postsFeed.appendChild(postElement);
-
-        // Обработчик лайков
-        document.getElementById(`like-${postId}`).onclick = () => toggleLike(postId, likes);
+      await addDoc(collection(db, "posts"), {
+        text: text,
+        imageUrl: img || null,
+        authorName: auth.currentUser.displayName || auth.currentUser.email,
+        authorAvatar: auth.currentUser.photoURL || 'https://via.placeholder.com/40',
+        authorId: auth.currentUser.uid,
+        createdAt: new Date(),
+        likes: []
       });
-    });
 
-    // Функция поставить / снять лайк
-    async function toggleLike(postId, likes) {
-      if (!currentUser) return alert("Авторизуйтесь, чтобы ставить лайки!");
-      
-      const postRef = doc(db, "posts", postId);
-      const hasLiked = likes.includes(currentUser.uid);
-
-      if (hasLiked) {
-        await updateDoc(postRef, { likes: arrayRemove(currentUser.uid) });
-      } else {
-        await updateDoc(postRef, { likes: arrayUnion(currentUser.uid) });
-      }
-    }
-
-    // Защита от XSS (внедрения чужого JS-кода)
-    function escapeHtml(text) {
-      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
+      document.getElementById('postInput').value = '';
+      document.getElementById('postImgInput').value = '';
+    };
   </script>
 </body>
 </html>
