@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Профиль</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1><a href="index.html">SocialNetwork</a></h1>
+    <a href="index.html"><button class="btn-secondary">На главную</button></a>
+  </header>
+
+  <div class="container">
+    <div class="card" style="text-align: center;">
+      <img id="profAvatar" class="avatar" style="width: 90px; height: 90px; margin-bottom: 10px;" src="">
+      <h2 id="profName"></h2>
+    </div>
+
+    <h3>Посты пользователя:</h3>
+    <div id="postsFeed" style="margin-top: 15px;"></div>
+  </div>
+
+  <script type="module">
+    import { auth, renderFeed } from './app.js';
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetUid = urlParams.get('uid');
+
+    onAuthStateChanged(auth, (user) => {
+      const uidToLoad = targetUid || user?.uid;
+
+      if (!uidToLoad) {
+        window.location.href = 'auth.html';
+        return;
+      }
+
+      if (user && uidToLoad === user.uid) {
+        document.getElementById('profName').textContent = user.displayName || user.email;
+        document.getElementById('profAvatar').src = user.photoURL;
+      }
+
+      renderFeed(uidToLoad);
+    });
+  </script>
+</body>
+</html>

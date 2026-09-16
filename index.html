@@ -2,31 +2,132 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Моя Соцсеть</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Социальная Сеть</title>
   <style>
-    body { font-family: sans-serif; max-width: 600px; margin: 20px auto; padding: 0 10px; }
-    textarea { width: 100%; height: 80px; margin-bottom: 10px; }
-    button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
-    .post { border: 1px solid #ccc; padding: 10px; margin-top: 10px; border-radius: 5px; }
+    :root {
+      --bg-color: #f0f2f5;
+      --card-bg: #ffffff;
+      --primary: #1877f2;
+      --primary-hover: #166fe5;
+      --text: #050505;
+      --subtext: #65676b;
+      --border: #dddfe2;
+      --danger: #e41e3f;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text); padding-bottom: 50px; }
+
+    /* Шляпка (Header) */
+    header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    header h1 { color: var(--primary); font-size: 24px; font-weight: bold; }
+    .user-profile-badge { display: flex; align-items: center; gap: 10px; }
+    .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #ccc; }
+
+    /* Контейнер */
+    .container { max-width: 680px; margin: 20px auto; padding: 0 15px; }
+
+    /* Карточки */
+    .card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Формы авторизации */
+    .auth-box { display: flex; flex-direction: column; gap: 12px; }
+    .auth-box h2 { text-align: center; margin-bottom: 10px; }
+    input, textarea {
+      width: 100%; padding: 12px; border: 1px solid var(--border);
+      border-radius: 6px; font-size: 15px; outline: none;
+    }
+    input:focus, textarea:focus { border-color: var(--primary); }
+    textarea { resize: vertical; min-height: 80px; }
+
+    button {
+      background: var(--primary); color: white; border: none;
+      padding: 10px 16px; border-radius: 6px; font-weight: 600;
+      font-size: 15px; cursor: pointer; transition: 0.2s;
+    }
+    button:hover { background: var(--primary-hover); }
+    .btn-secondary { background: #e4e6eb; color: var(--text); }
+    .btn-secondary:hover { background: #d8dadf; }
+    .btn-danger { background: var(--danger); }
+
+    /* Публикация */
+    .create-post { display: flex; flex-direction: column; gap: 10px; }
+    
+    /* Лента Постов */
+    .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .post-author { font-weight: 600; font-size: 15px; }
+    .post-date { font-size: 12px; color: var(--subtext); }
+    .post-content { font-size: 15px; line-height: 1.4; margin-bottom: 12px; white-space: pre-wrap; }
+    .post-footer { display: flex; gap: 15px; border-top: 1px solid var(--border); padding-top: 10px; }
+    .like-btn { background: none; color: var(--subtext); padding: 5px 10px; display: flex; align-items: center; gap: 6px; }
+    .like-btn.liked { color: var(--danger); font-weight: bold; }
+    
+    .hidden { display: none !important; }
+    .auth-toggle { text-align: center; margin-top: 10px; font-size: 14px; color: var(--primary); cursor: pointer; }
   </style>
 </head>
 <body>
 
-  <h1>Социальная сеть</h1>
-  
-  <div>
-    <textarea id="postInput" placeholder="Что нового?"></textarea>
-    <button id="sendBtn">Опубликовать</button>
+  <!-- Хедер -->
+  <header>
+    <h1>SocialNetwork</h1>
+    <div id="userHeader" class="user-profile-badge hidden">
+      <img id="myAvatar" class="avatar" src="https://via.placeholder.com/40" alt="Avatar">
+      <span id="myDisplayName" style="font-weight: 600;"></span>
+      <button id="logoutBtn" class="btn-secondary" style="padding: 6px 12px; font-size: 13px;">Выйти</button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- ФОРМА ВХОДА И РЕГИСТРАЦИИ -->
+    <div id="authSection" class="card auth-box">
+      <h2 id="authTitle">Вход в аккаунт</h2>
+      <input type="text" id="nameInput" placeholder="Ваше Имя / Никнейм" class="hidden">
+      <input type="email" id="emailInput" placeholder="Электронная почта">
+      <input type="password" id="passwordInput" placeholder="Пароль">
+      <button id="authPrimaryBtn">Войти</button>
+      <div id="authToggleBtn" class="auth-toggle">Нет аккаунта? Зарегистрироваться</div>
+    </div>
+
+  <!-- ФОРМА СОЗДАНИЯ ПОСТА (Видна только авторизованным) -->
+    <div id="postCreateSection" class="card create-post hidden">
+      <textarea id="postInput" placeholder="Что у вас нового?"></textarea>
+      <button id="publishBtn">Опубликовать</button>
+    </div>
+
+    <!-- ЛЕНТА НОВОСТЕЙ -->
+    <div id="postsFeed"></div>
+
   </div>
 
-  <h2>Лента постов</h2>
-  <div id="postsList"></div>
-
+  <!-- Firebase JavaScript SDK (Модульное подключение) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { 
+      getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, 
+      signOut, onAuthStateChanged, updateProfile 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getFirestore, collection, addDoc, onSnapshot, query, orderBy, 
+      doc, updateDoc, arrayUnion, arrayRemove 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Ваши конфигурационные данные
+    // Конфигурация проекта Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyAisrucwhJn-DUlsPKhB1sdf5tF3OfOVzA",
       authDomain: "fsfs-27fa1.firebaseapp.com",
@@ -39,35 +140,160 @@
 
     // Инициализация
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Отправка поста
-    document.getElementById('sendBtn').onclick = async () => {
-      const text = document.getElementById('postInput').value;
-      if (!text.trim()) return alert('Введите текст!');
+    let currentUser = null;
+    let isSignUpMode = false;
 
-      await addDoc(collection(db, "posts"), {
-        text: text,
-        createdAt: new Date()
-      });
+    // DOM Элементы
+    const authSection = document.getElementById('authSection');
+    const authTitle = document.getElementById('authTitle');
+    const nameInput = document.getElementById('nameInput');
+    const emailInput = document.getElementById('emailInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const authPrimaryBtn = document.getElementById('authPrimaryBtn');
+    const authToggleBtn = document.getElementById('authToggleBtn');
+    
+    const userHeader = document.getElementById('userHeader');
+    const myAvatar = document.getElementById('myAvatar');
+    const myDisplayName = document.getElementById('myDisplayName');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    const postCreateSection = document.getElementById('postCreateSection');
+    const postInput = document.getElementById('postInput');
+    const publishBtn = document.getElementById('publishBtn');
+    const postsFeed = document.getElementById('postsFeed');
 
-      document.getElementById('postInput').value = '';
+    // Переключение режимов: Вход / Регистрация
+    authToggleBtn.onclick = () => {
+      isSignUpMode = !isSignUpMode;
+      authTitle.textContent = isSignUpMode ? "Регистрация" : "Вход в аккаунт";
+      authPrimaryBtn.textContent = isSignUpMode ? "Зарегистрироваться" : "Войти";
+      nameInput.classList.toggle('hidden', !isSignUpMode);
+      authToggleBtn.textContent = isSignUpMode ? "Уже есть аккаунт? Войти" : "Нет аккаунта? Зарегистрироваться";
     };
 
-    // Чтение постов в реальном времени
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-    onSnapshot(q, (snapshot) => {
-      const postsList = document.getElementById('postsList');
-      postsList.innerHTML = '';
+    // Обработка Входа / Регистрации
+    authPrimaryBtn.onclick = async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      const name = nameInput.value.trim();
+
+      if (!email || !password) return alert('Заполните все поля!');
+
+      try {
+        if (isSignUpMode) {
+          if (!name) return alert('Введите ваше имя!');
+          const res = await createUserWithEmailAndPassword(auth, email, password);
+          // Установка стандартного аватара и имени
+          await updateProfile(res.user, {
+            displayName: name,
+            photoURL: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`
+          });
+          location.reload();
+        } else {
+          await signInWithEmailAndPassword(auth, email, password);
+        }
+      } catch (error) {
+        alert("Ошибка: " + error.message);
+      }
+    };
+
+    // Выход из системы
+    logoutBtn.onclick = () => signOut(auth);
+
+    // Отслеживание состояния входа
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      if (user) {
+        authSection.classList.add('hidden');
+        userHeader.classList.remove('hidden');
+        postCreateSection.classList.remove('hidden');
+        
+        myDisplayName.textContent = user.displayName || user.email;
+        myAvatar.src = user.photoURL || 'https://via.placeholder.com/40';
+      } else {
+        authSection.classList.remove('hidden');
+        userHeader.classList.add('hidden');
+        postCreateSection.classList.add('hidden');
+      }
+    });
+
+    // Публикация нового поста
+    publishBtn.onclick = async () => {
+      const text = postInput.value.trim();
+      if (!text) return alert('Пост не может быть пустым!');
+
+      try {
+        await addDoc(collection(db, "posts"), {
+          text: text,
+          authorName: currentUser.displayName || currentUser.email,
+          authorAvatar: currentUser.photoURL || 'https://via.placeholder.com/40',
+          authorId: currentUser.uid,
+          createdAt: new Date(),
+          likes: []
+        });
+        postInput.value = '';
+      } catch (err) {
+        alert("Ошибка при публикации: " + err.message);
+      }
+    };
+
+    // Загрузка ленты новостей в реальном времени
+    const postsQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+    onSnapshot(postsQuery, (snapshot) => {
+      postsFeed.innerHTML = '';
       
-      snapshot.forEach((doc) => {
-        const post = doc.data();
-        const div = document.createElement('div');
-        div.className = 'post';
-        div.textContent = post.text;
-        postsList.appendChild(div);
+      snapshot.forEach((docSnap) => {
+        const post = docSnap.data();
+        const postId = docSnap.id;
+        const likes = post.likes || [];
+        const isLiked = currentUser && likes.includes(currentUser.uid);
+
+        const postElement = document.createElement('div');
+        postElement.className = 'card';
+        postElement.innerHTML = `
+          <div class="post-header">
+            <img class="avatar" src="${post.authorAvatar}" alt="Avatar">
+            <div>
+              <div class="post-author">${post.authorName}</div>
+              <div class="post-date">${post.createdAt ? new Date(post.createdAt.toDate()).toLocaleString() : ''}</div>
+            </div>
+          </div>
+          <div class="post-content">${escapeHtml(post.text)}</div>
+          <div class="post-footer">
+            <button class="like-btn ${isLiked ? 'liked' : ''}" id="like-${postId}">
+              ❤️ ${likes.length}
+            </button>
+          </div>
+        `;
+
+        postsFeed.appendChild(postElement);
+
+        // Обработчик лайков
+        document.getElementById(`like-${postId}`).onclick = () => toggleLike(postId, likes);
       });
     });
+
+    // Функция поставить / снять лайк
+    async function toggleLike(postId, likes) {
+      if (!currentUser) return alert("Авторизуйтесь, чтобы ставить лайки!");
+      
+      const postRef = doc(db, "posts", postId);
+      const hasLiked = likes.includes(currentUser.uid);
+
+      if (hasLiked) {
+        await updateDoc(postRef, { likes: arrayRemove(currentUser.uid) });
+      } else {
+        await updateDoc(postRef, { likes: arrayUnion(currentUser.uid) });
+      }
+    }
+
+    // Защита от XSS (внедрения чужого JS-кода)
+    function escapeHtml(text) {
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
   </script>
 </body>
 </html>

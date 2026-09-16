@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Авторизация</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1><a href="index.html">SocialNetwork</a></h1>
+  </header>
+
+  <div class="container">
+    <div class="card" style="max-width: 400px; margin: 40px auto;">
+      <h2 id="title" style="margin-bottom: 15px; text-align: center;">Вход</h2>
+      <input type="text" id="name" placeholder="Ваше Имя" class="hidden">
+      <input type="email" id="email" placeholder="Email">
+      <input type="password" id="password" placeholder="Пароль">
+      <button id="submitBtn" style="width: 100%;">Войти</button>
+      <p id="toggle" style="margin-top: 15px; text-align: center; color: var(--primary); cursor: pointer;">Нет аккаунта? Зарегистрироваться</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth } from './app.js';
+    import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    let isSignUp = false;
+
+    document.getElementById('toggle').onclick = () => {
+      isSignUp = !isSignUp;
+      document.getElementById('title').textContent = isSignUp ? "Регистрация" : "Вход";
+      document.getElementById('submitBtn').textContent = isSignUp ? "Зарегистрироваться" : "Войти";
+      document.getElementById('name').classList.toggle('hidden', !isSignUp);
+    };
+
+    document.getElementById('submitBtn').onclick = async () => {
+      const email = document.getElementById('email').value;
+      const pass = document.getElementById('password').value;
+      const name = document.getElementById('name').value;
+
+      try {
+        if (isSignUp) {
+          const res = await createUserWithEmailAndPassword(auth, email, pass);
+          await updateProfile(res.user, {
+            displayName: name,
+            photoURL: `https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`
+          });
+        } else {
+          await signInWithEmailAndPassword(auth, email, pass);
+        }
+        window.location.href = 'index.html';
+      } catch (err) {
+        alert("Ошибка: " + err.message);
+      }
+    };
+  </script>
+</body>
+</html>
