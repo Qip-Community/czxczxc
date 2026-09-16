@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Главная - SocialNetwork</title>
+  <title>SocialNetwork - Лента</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,19 +21,16 @@
   </header>
 
   <div class="container">
-    <!-- Поиск постов -->
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="🔍 Поиск по постам...">
     </div>
 
-    <!-- Публикация -->
     <div id="postCreateSection" class="card hidden">
       <textarea id="postInput" placeholder="Что нового?"></textarea>
       <input type="text" id="postImgInput" placeholder="URL-ссылка на картинку (необязательно)">
       <button id="publishBtn">Опубликовать</button>
     </div>
 
-    <!-- Лента -->
     <div id="postsFeed"></div>
   </div>
 
@@ -43,12 +40,10 @@
 
     renderFeed();
 
-    // Фильтрация через поиск
     document.getElementById('searchInput').oninput = (e) => {
       renderFeed(null, e.target.value);
     };
 
-    // Опубликовать
     document.getElementById('publishBtn').onclick = async () => {
       const text = document.getElementById('postInput').value.trim();
       const img = document.getElementById('postImgInput').value.trim();

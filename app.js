@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { 
-  getAuth, signOut, onAuthStateChanged, updateProfile 
+  getAuth, signOut, onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { 
   getFirestore, collection, addDoc, onSnapshot, query, orderBy, 
@@ -23,7 +23,6 @@ export const db = getFirestore(app);
 
 const commentUnsubs = {};
 
-// Глобальный слушатель пользователя
 onAuthStateChanged(auth, (user) => {
   const userHeader = document.getElementById('userHeader');
   const authNavBtn = document.getElementById('authNavBtn');
@@ -47,7 +46,6 @@ onAuthStateChanged(auth, (user) => {
 const logoutBtn = document.getElementById('logoutBtn');
 if (logoutBtn) logoutBtn.onclick = () => signOut(auth);
 
-// Рендеринг постов
 export function renderFeed(targetUid = null, searchQuery = '') {
   const feed = document.getElementById('postsFeed');
   if (!feed) return;
@@ -64,7 +62,6 @@ export function renderFeed(targetUid = null, searchQuery = '') {
       const post = docSnap.data();
       const id = docSnap.id;
       
-      // Фильтрация поиска
       if (searchQuery && !post.text.toLowerCase().includes(searchQuery.toLowerCase())) {
         return;
       }
