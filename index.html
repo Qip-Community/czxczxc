@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Моя Соцсеть</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 20px auto; padding: 0 10px; }
+    textarea { width: 100%; height: 80px; margin-bottom: 10px; }
+    button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+    .post { border: 1px solid #ccc; padding: 10px; margin-top: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+
+  <h1>Социальная сеть</h1>
+  
+  <div>
+    <textarea id="postInput" placeholder="Что нового?"></textarea>
+    <button id="sendBtn">Опубликовать</button>
+  </div>
+
+  <h2>Лента постов</h2>
+  <div id="postsList"></div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Ваши конфигурационные данные
+    const firebaseConfig = {
+      apiKey: "AIzaSyAisrucwhJn-DUlsPKhB1sdf5tF3OfOVzA",
+      authDomain: "fsfs-27fa1.firebaseapp.com",
+      projectId: "fsfs-27fa1",
+      storageBucket: "fsfs-27fa1.firebasestorage.app",
+      messagingSenderId: "191715294559",
+      appId: "1:191715294559:web:272608cd9c0f171c1bcaea",
+      measurementId: "G-5BY3NFN2F8"
+    };
+
+    // Инициализация
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Отправка поста
+    document.getElementById('sendBtn').onclick = async () => {
+      const text = document.getElementById('postInput').value;
+      if (!text.trim()) return alert('Введите текст!');
+
+      await addDoc(collection(db, "posts"), {
+        text: text,
+        createdAt: new Date()
+      });
+
+      document.getElementById('postInput').value = '';
+    };
+
+    // Чтение постов в реальном времени
+    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snapshot) => {
+      const postsList = document.getElementById('postsList');
+      postsList.innerHTML = '';
+      
+      snapshot.forEach((doc) => {
+        const post = doc.data();
+        const div = document.createElement('div');
+        div.className = 'post';
+        div.textContent = post.text;
+        postsList.appendChild(div);
+      });
+    });
+  </script>
+</body>
+</html>
